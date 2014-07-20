@@ -14,7 +14,7 @@ namespace nhammerl.TTRecorder.ViewModel
     {
         #region Properties
 
-        public ViewModelCommand PunshIn { get; set; }
+        public ViewModelCommand PunchIn { get; set; }
 
         public ViewModelCommand CloseInputDialog { get; set; }
 
@@ -59,10 +59,10 @@ namespace nhammerl.TTRecorder.ViewModel
         public MainViewModel()
         {
             // Init Commands
-            PunshIn = new ViewModelCommand
+            PunchIn = new ViewModelCommand
             {
                 Command = new RelayCommand(r => ShowInputDialog = true),
-                Text = "Punsh in!"
+                Text = "Punch-in!"
             };
 
             CloseInputDialog = new ViewModelCommand

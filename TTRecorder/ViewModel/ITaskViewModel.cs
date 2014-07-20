@@ -21,7 +21,7 @@ namespace nhammerl.TTRecorder.ViewModel
         ICommandViewModel Break { get; set; }
 
         // Action, fired on PushOut button.
-        ICommandViewModel PunshOut { get; set; }
+        ICommandViewModel PunchOut { get; set; }
 
         // Current state from Task.
         TaskState State { get; set; }

@@ -63,7 +63,7 @@ namespace nhammerl.TTRecorder.ViewModel
             }
         }
 
-        public ICommandViewModel PunshOut { get; set; }
+        public ICommandViewModel PunchOut { get; set; }
 
         private TaskState _state;
 
@@ -153,7 +153,7 @@ namespace nhammerl.TTRecorder.ViewModel
                 Text = "Break"
             };
 
-            PunshOut = new ViewModelCommand
+            PunchOut = new ViewModelCommand
             {
                 Command = new RelayCommand(r => FinishTask()),
                 Text = "Finished"

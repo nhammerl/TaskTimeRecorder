@@ -7,7 +7,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button Margin="10" VerticalAlignment="Top" HorizontalAlignment="Center" Command="{Binding PunshIn.Command}" Content="{Binding PunshIn.Text}"></Button>
+        <Button Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding PunchIn.Command}" Content="{Binding PunchIn.Text}"></Button>
 
         <Grid Margin="50">
             <Grid.ColumnDefinitions>
@@ -24,7 +24,7 @@
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="1" Text="Start" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="2" Text="End" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="3" Text="Break" />
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="4" Text="Punsh out" />
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="4" Text="Punch-out" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="5" Text="State" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="6" Text="Actual time" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="7" Text="Remove task" />
@@ -48,7 +48,7 @@
                             <TextBlock Grid.Column="1" Text="{Binding TaskModel.Start}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <TextBlock Grid.Column="2" Text="{Binding TaskModel.End}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <Button IsEnabled="{Binding IsEnabled}" Grid.Column="3" Content="{Binding Break.Text, Mode=TwoWay}" Command="{Binding Break.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></Button>
-                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="4" Content="{Binding PunshOut.Text, Mode=TwoWay}" Command="{Binding PunshOut.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></Button>
+                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="4" Content="{Binding PunchOut.Text, Mode=TwoWay}" Command="{Binding PunchOut.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></Button>
                             <TextBlock Grid.Column="5" Text="{Binding State}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <TextBlock Grid.Column="6" Text="{Binding ElapsedTime}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <Button Grid.Column="7" Command="{Binding DeleteFromList.Command}" Content="{Binding DeleteFromList.Text}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></Button>
