@@ -7,14 +7,14 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button Height="40" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding PunchIn.Command}">
+        <Button Height="40" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding PunchIn.Command}">
             <StackPanel Orientation="Horizontal">
                 <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding PunchIn.ImagePath}" />
                 <TextBlock Margin="5,0,0,0" Text="{Binding PunchIn.Text}" VerticalAlignment="Center" />
             </StackPanel>
         </Button>
 
-        <Grid Margin="50">
+        <Grid Margin="20,80,20,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -34,7 +34,7 @@
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="6" Text="Actual time" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="7" Text="Remove task" />
         </Grid>
-        <ListView x:Name="TaskList" BorderBrush="Black" BorderThickness="2" Margin="50,80,50,50" ItemsSource="{Binding Tasks}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
+        <ListView x:Name="TaskList" BorderBrush="Black" BorderThickness="2" Margin="20,115,20,20" ItemsSource="{Binding Tasks}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="2" BorderBrush="{Binding BorderBrush}">
