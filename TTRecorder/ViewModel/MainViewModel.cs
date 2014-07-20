@@ -62,7 +62,8 @@ namespace nhammerl.TTRecorder.ViewModel
             PunchIn = new ViewModelCommand
             {
                 Command = new RelayCommand(r => ShowInputDialog = true),
-                Text = "Punch-in!"
+                Text = "Punch-in!",
+                ImagePath = @"Images/play.png"
             };
 
             CloseInputDialog = new ViewModelCommand

@@ -7,7 +7,12 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding PunchIn.Command}" Content="{Binding PunchIn.Text}"></Button>
+        <Button Height="40" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding PunchIn.Command}">
+            <StackPanel Orientation="Horizontal">
+                <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding PunchIn.ImagePath}" />
+                <TextBlock Margin="5,0,0,0" Text="{Binding PunchIn.Text}" VerticalAlignment="Center" />
+            </StackPanel>
+        </Button>
 
         <Grid Margin="50">
             <Grid.ColumnDefinitions>
@@ -47,11 +52,26 @@
                             <TextBox IsEnabled="{Binding IsEnabled}" Grid.Column="0" Text="{Binding TaskModel.Title}" Margin="10,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                             <TextBlock Grid.Column="1" Text="{Binding TaskModel.Start}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <TextBlock Grid.Column="2" Text="{Binding TaskModel.End}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="3" Content="{Binding Break.Text, Mode=TwoWay}" Command="{Binding Break.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></Button>
-                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="4" Content="{Binding PunchOut.Text, Mode=TwoWay}" Command="{Binding PunchOut.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></Button>
+                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="3" Command="{Binding Break.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding Break.ImagePath}" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding Break.Text}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="4" Command="{Binding PunchOut.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding PunchOut.ImagePath}" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding PunchOut.Text}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
                             <TextBlock Grid.Column="5" Text="{Binding State}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <TextBlock Grid.Column="6" Text="{Binding ElapsedTime}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                            <Button Grid.Column="7" Command="{Binding DeleteFromList.Command}" Content="{Binding DeleteFromList.Text}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></Button>
+                            <Button Grid.Column="7" Command="{Binding DeleteFromList.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding DeleteFromList.ImagePath}" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding DeleteFromList.Text}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
                         </Grid>
                     </Border>
                 </DataTemplate>

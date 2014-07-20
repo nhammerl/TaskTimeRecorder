@@ -83,16 +83,19 @@ namespace nhammerl.TTRecorder.ViewModel
                     case TaskState.Completed:
                         BorderBrush = new SolidColorBrush(Colors.Green) { Opacity = 0.5 };
                         IsEnabled = false;
+                        Break.ImagePath = @"Images/finish.png";
                         break;
 
                     case TaskState.OnBreak:
                         BorderBrush = new SolidColorBrush(Colors.Red) { Opacity = 0.5 };
                         IsEnabled = true;
+                        Break.ImagePath = @"Images/play.png";
                         break;
 
                     case TaskState.Running:
                         BorderBrush = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
                         IsEnabled = true;
+                        Break.ImagePath = @"Images/break.png";
                         break;
                 }
             }
@@ -142,7 +145,6 @@ namespace nhammerl.TTRecorder.ViewModel
         /// </summary>
         public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList)
         {
-            State = TaskState.Running;
             _taskOnBreak = false;
             TaskModel = taskModel;
             this._targetList = targetList;
@@ -156,7 +158,8 @@ namespace nhammerl.TTRecorder.ViewModel
             PunchOut = new ViewModelCommand
             {
                 Command = new RelayCommand(r => FinishTask()),
-                Text = "Finished"
+                Text = "Finished",
+                ImagePath = @"Images/finish.png"
             };
 
             DeleteFromList = new ViewModelCommand
@@ -169,13 +172,16 @@ namespace nhammerl.TTRecorder.ViewModel
                             targetList.Remove(this);
                         }
                     }),
-                Text = "Delete"
+                Text = "Delete",
+                ImagePath = "Images/delete.png"
             };
 
             _timer = new DispatcherTimer();
             _timer.Tick += timer_Tick;
             _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Start();
+
+            State = TaskState.Running;
         }
 
         private void timer_Tick(object sender, object e)
