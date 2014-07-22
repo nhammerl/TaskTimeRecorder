@@ -190,7 +190,7 @@ namespace nhammerl.TTRecorder.ViewModel
             {
                 var pausedMinutes = TaskModel.Breaks.Sum(b => b.TotalSeconds);
 
-                ElapsedTime = TimeSpan.FromSeconds((((DateTime.Now - TaskModel.Start).TotalSeconds) - pausedMinutes)).ToString(@"dd\.hh\:mm\:ss");
+                ElapsedTime = TimeSpan.FromSeconds((((DateTime.Now - TaskModel.Start).TotalSeconds) - pausedMinutes)).ToString(@"hh\:mm\:ss");
             }
         }
 

@@ -4,8 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
+    mc:Ignorable="d"
+    xmlns:c="using:nhammerl.TTRecorder.ViewModel.Converter">
+    <UserControl.Resources>
+        <c:StringFormatConverter x:Key="StringFormat" />
+    </UserControl.Resources>
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="Images/background.png"
@@ -30,12 +33,12 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="0" Text="Title" />
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="1" Text="Start" />
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="2" Text="End" />
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="3" Text="Break" />
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="4" Text="Punch-out" />
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="2" Text="Start" />
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="3" Text="End" />
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="4" Text="Break" />
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="6" Text="Punch-out" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="5" Text="State" />
-            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="6" Text="Actual time" />
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="1" Text="Elapsed time" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="7" Text="Remove task" />
         </Grid>
         <ListView x:Name="TaskList" BorderBrush="DarkGray" BorderThickness="1" Margin="20,115,20,20" ItemsSource="{Binding Tasks}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
@@ -54,22 +57,22 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <TextBox IsEnabled="{Binding IsEnabled}" Grid.Column="0" Text="{Binding TaskModel.Title}" Margin="10,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
-                            <TextBlock Grid.Column="1" Text="{Binding TaskModel.Start}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                            <TextBlock Grid.Column="2" Text="{Binding TaskModel.End}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="3" Command="{Binding Break.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <TextBlock Grid.Column="2" Text="{Binding TaskModel.Start, Converter={StaticResource StringFormat}, ConverterParameter='{}{0:G}'}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                            <TextBlock Grid.Column="3" Text="{Binding TaskModel.End, Converter={StaticResource StringFormat}, ConverterParameter='{}{0:G}'}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="4" Command="{Binding Break.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding Break.ImagePath}" />
                                     <TextBlock Margin="5,0,0,0" Text="{Binding Break.Text}" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Button>
-                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="4" Command="{Binding PunchOut.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="6" Command="{Binding PunchOut.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding PunchOut.ImagePath}" />
                                     <TextBlock Margin="5,0,0,0" Text="{Binding PunchOut.Text}" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Button>
                             <TextBlock Grid.Column="5" Text="{Binding State}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
-                            <TextBlock Grid.Column="6" Text="{Binding ElapsedTime}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
+                            <TextBlock Grid.Column="1" Text="{Binding ElapsedTime}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <Button Grid.Column="7" Command="{Binding DeleteFromList.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding DeleteFromList.ImagePath}" />
