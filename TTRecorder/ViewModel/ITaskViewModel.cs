@@ -34,5 +34,7 @@ namespace nhammerl.TTRecorder.ViewModel
 
         // Remove item from specified list if available
         ICommandViewModel DeleteFromList { get; set; }
+
+        double ItemVisualWidth { get; set; }
     }
 }

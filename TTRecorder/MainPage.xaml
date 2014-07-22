@@ -41,11 +41,11 @@
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="1" Text="Elapsed time" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="7" Text="Remove task" />
         </Grid>
-        <ListView x:Name="TaskList" BorderBrush="DarkGray" BorderThickness="1" Margin="20,115,20,20" ItemsSource="{Binding Tasks}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
+        <ListView Name="TaskList" BorderBrush="DarkGray" BorderThickness="1" Margin="20,130,20,20" ItemsSource="{Binding Tasks}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="2" BorderBrush="{Binding BorderBrush}">
-                        <Grid Width="{Binding ElementName=TaskList, Path=ActualWidth}">
+                        <Grid Width="{Binding ItemVisualWidth}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition />

@@ -14,6 +14,8 @@ namespace nhammerl.TTRecorder.ViewModel
     {
         #region Properties
 
+        private readonly MainPage _mainPage;
+
         public ViewModelCommand PunchIn { get; set; }
 
         public ViewModelCommand CloseInputDialog { get; set; }
@@ -56,8 +58,9 @@ namespace nhammerl.TTRecorder.ViewModel
         /// <summary>
         /// Constructor of the class.
         /// </summary>
-        public MainViewModel()
+        public MainViewModel(MainPage mainPage)
         {
+            _mainPage = mainPage;
             // Init Commands
             PunchIn = new ViewModelCommand
             {
@@ -91,7 +94,7 @@ namespace nhammerl.TTRecorder.ViewModel
         /// </summary>
         public void CreateTask()
         {
-            Tasks.Add(new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks));
+            Tasks.Add(new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks) { ItemVisualWidth = _mainPage.ActualWidth });
             ShowInputDialog = false;
         }
 

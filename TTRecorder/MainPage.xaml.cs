@@ -1,7 +1,10 @@
 ﻿// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 using nhammerl.TTRecorder.ViewModel;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.System;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -18,9 +21,23 @@ namespace nhammerl.TTRecorder
         public MainPage()
         {
             this.InitializeComponent();
-            _mainViewModel = new MainViewModel();
+            _mainViewModel = new MainViewModel(this);
 
+            this.SizeChanged += MainPage_SizeChanged;
             this.DataContext = _mainViewModel;
+        }
+
+        /// <summary>
+        /// Workaround to change the width of all items on changing the with of the window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            foreach (var task in TaskList.Items.Cast<ITaskViewModel>())
+            {
+                task.ItemVisualWidth = TaskList.ActualWidth;
+            }
         }
 
         /// <summary>

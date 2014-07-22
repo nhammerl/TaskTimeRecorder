@@ -140,6 +140,18 @@ namespace nhammerl.TTRecorder.ViewModel
             }
         }
 
+        private double _itemVisualWidth;
+
+        public double ItemVisualWidth
+        {
+            get { return _itemVisualWidth; }
+            set
+            {
+                _itemVisualWidth = value;
+                OnPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Constructor of the class.
         /// </summary>
