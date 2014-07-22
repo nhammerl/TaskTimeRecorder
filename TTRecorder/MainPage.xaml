@@ -21,6 +21,8 @@
             </StackPanel>
         </Button>
 
+        <Button Height="40" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Command="{Binding CreateOutputFile.Command}" Content="{Binding CreateOutputFile.Text}"></Button>
+
         <Grid Margin="20,80,20,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
