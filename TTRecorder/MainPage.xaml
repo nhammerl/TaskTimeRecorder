@@ -6,7 +6,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Images/background.png"
+                    Stretch="UniformToFill" />
+        </Grid.Background>
         <Button Height="40" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{Binding PunchIn.Command}">
             <StackPanel Orientation="Horizontal">
                 <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding PunchIn.ImagePath}" />
@@ -34,7 +38,7 @@
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="6" Text="Actual time" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="7" Text="Remove task" />
         </Grid>
-        <ListView x:Name="TaskList" BorderBrush="Black" BorderThickness="2" Margin="20,115,20,20" ItemsSource="{Binding Tasks}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
+        <ListView x:Name="TaskList" BorderBrush="DarkGray" BorderThickness="1" Margin="20,115,20,20" ItemsSource="{Binding Tasks}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="2" BorderBrush="{Binding BorderBrush}">
@@ -77,15 +81,15 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Popup IsOpen="{Binding ShowInputDialog}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350" Height="80" Opened="FocusTextBoxOnopen">
-            <Border BorderBrush="Black" BorderThickness="1" Margin="5" Background="DarkGray">
+        <Popup IsOpen="{Binding ShowInputDialog}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350" Height="100" Opened="FocusTextBoxOnopen">
+            <Border BorderBrush="DarkGray" BorderThickness="1" Margin="5" Background="Black">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <TextBlock Margin="5" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="0" Text="Create new task." HorizontalAlignment="Left"></TextBlock>
+                    <TextBlock Margin="5" Style="{StaticResource SubtitleTextBlockStyle}" Grid.Row="0" Text="Name of the task." HorizontalAlignment="Left"></TextBlock>
                     <Button Grid.Row="0" HorizontalAlignment="Right" Content="{Binding CloseDialog.Text}" Command="{Binding CloseDialog.Command}"></Button>
                     <TextBox KeyUp="InputFieldKeyUpFocusButtonOnEnter" x:Name="InputFromInputDialog" Grid.Row="1" Text="{Binding DialogInputValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" HorizontalAlignment="Left" Width="340"></TextBox>
                     <Button Grid.Row="2" Command="{Binding CloseInputDialog.Command}" Content="{Binding CloseInputDialog.Text}" HorizontalAlignment="Right"></Button>
