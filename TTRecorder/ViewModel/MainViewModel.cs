@@ -116,6 +116,9 @@ namespace nhammerl.TTRecorder.ViewModel
             ShowInputDialog = false;
         }
 
+        /// <summary>
+        /// Generates an output TXT File.
+        /// </summary>
         public async void GenerateOutputFile()
         {
             var savePicker = new FileSavePicker { SuggestedStartLocation = PickerLocationId.DocumentsLibrary };
@@ -150,6 +153,10 @@ namespace nhammerl.TTRecorder.ViewModel
             }
         }
 
+        /// <summary>
+        /// Builds the taskinformation into string.
+        /// </summary>
+        /// <returns></returns>
         private string BuildTaskInfo()
         {
             var taskInfoBuilder = new StringBuilder();
@@ -183,6 +190,10 @@ namespace nhammerl.TTRecorder.ViewModel
             return taskInfoBuilder.ToString();
         }
 
+        /// <summary>
+        /// Displays an message.
+        /// </summary>
+        /// <param name="message"></param>
         private void ShowMessage(string message)
         {
             var dialogWindow = new MessageDialog(message);
