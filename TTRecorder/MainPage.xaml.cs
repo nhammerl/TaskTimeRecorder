@@ -48,11 +48,21 @@ namespace nhammerl.TTRecorder
             InputFromInputDialog.Focus(FocusState.Keyboard);
         }
 
+        /// <summary>
+        /// Disable the selected item highlighting.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectionChangedOnTaskListSetSelectedItemToNull(object sender, SelectionChangedEventArgs e)
         {
             TaskList.SelectedItem = null;
         }
 
+        /// <summary>
+        /// Enable create task on press enter in popup mask.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void InputFieldKeyUpFocusButtonOnEnter(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key != VirtualKey.Enter) { return; }
