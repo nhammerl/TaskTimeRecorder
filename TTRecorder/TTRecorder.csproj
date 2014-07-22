@@ -146,6 +146,7 @@
     <Content Include="Images\delete.png" />
     <Content Include="Images\finish.png" />
     <Content Include="Images\play.png" />
+    <Content Include="Images\save.png" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

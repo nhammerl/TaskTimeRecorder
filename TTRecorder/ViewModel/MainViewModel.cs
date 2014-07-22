@@ -11,6 +11,7 @@ using System.Text;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Windows.UI.Popups;
 
 namespace nhammerl.TTRecorder.ViewModel
 {
@@ -98,7 +99,8 @@ namespace nhammerl.TTRecorder.ViewModel
             CreateOutputFile = new ViewModelCommand
             {
                 Command = new RelayCommand(r => GenerateOutputFile()),
-                Text = "Save to file"
+                Text = "Save to file",
+                ImagePath = @"Images/save.png"
             };
 
             // Init Taskcollection.
@@ -112,15 +114,6 @@ namespace nhammerl.TTRecorder.ViewModel
         {
             Tasks.Add(new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks) { ItemVisualWidth = _mainPage.ActualWidth });
             ShowInputDialog = false;
-        }
-
-        /// <summary>
-        /// Show a messagedialog
-        /// </summary>
-        /// <param name="message">message to display</param>
-        public void ShowMessage(string message)
-        {
-            ShowInputDialog = true;
         }
 
         public async void GenerateOutputFile()
@@ -148,19 +141,13 @@ namespace nhammerl.TTRecorder.ViewModel
 
                 if (status == FileUpdateStatus.Complete)
                 {
-                    ShowMessage("File " + file.Name + " was saved.");
+                    ShowMessage("File " + file.Name + " saved.");
                 }
                 else
                 {
                     ShowMessage("File " + file.Name + " couldn't be saved.");
                 }
             }
-            else
-            {
-                ShowMessage("Operation cancelled.");
-            }
-
-            ShowInputDialog = false;
         }
 
         private string BuildTaskInfo()
@@ -194,6 +181,12 @@ namespace nhammerl.TTRecorder.ViewModel
             }
 
             return taskInfoBuilder.ToString();
+        }
+
+        private void ShowMessage(string message)
+        {
+            var dialogWindow = new MessageDialog(message);
+            dialogWindow.ShowAsync();
         }
 
         #region PropertyChanged helper

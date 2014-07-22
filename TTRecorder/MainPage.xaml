@@ -20,8 +20,12 @@
                 <TextBlock Margin="5,0,0,0" Text="{Binding PunchIn.Text}" VerticalAlignment="Center" />
             </StackPanel>
         </Button>
-
-        <Button Height="40" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Command="{Binding CreateOutputFile.Command}" Content="{Binding CreateOutputFile.Text}"></Button>
+        <Button Height="40" Margin="20" VerticalAlignment="Top" HorizontalAlignment="Right" Command="{Binding CreateOutputFile.Command}">
+            <StackPanel Orientation="Horizontal">
+                <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding CreateOutputFile.ImagePath}" />
+                <TextBlock Margin="5,0,0,0" Text="{Binding CreateOutputFile.Text}" VerticalAlignment="Center" />
+            </StackPanel>
+        </Button>
 
         <Grid Margin="20,80,20,20">
             <Grid.ColumnDefinitions>
