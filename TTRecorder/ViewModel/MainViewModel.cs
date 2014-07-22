@@ -98,7 +98,7 @@ namespace nhammerl.TTRecorder.ViewModel
             CreateOutputFile = new ViewModelCommand
             {
                 Command = new RelayCommand(r => GenerateOutputFile()),
-                Text = "Create TXT"
+                Text = "Save to file"
             };
 
             // Init Taskcollection.

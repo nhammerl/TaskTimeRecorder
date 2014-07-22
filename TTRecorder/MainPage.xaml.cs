@@ -2,9 +2,7 @@
 
 using nhammerl.TTRecorder.ViewModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.System;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
