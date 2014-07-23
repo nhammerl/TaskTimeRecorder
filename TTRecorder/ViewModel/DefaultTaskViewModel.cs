@@ -2,7 +2,6 @@
 using nhammerl.TTRecorder.Model;
 using nhammerl.TTRecorder.ViewModel.Command;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
