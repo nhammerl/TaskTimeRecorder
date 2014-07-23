@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="5b08f012-20c6-478f-8192-2f9a4a0a47ee" Publisher="CN=nhammerl" Version="1.0.0.0" />
+  <Identity Name="33111NicoHammerl.TaskTimeRecorder" Publisher="CN=7EE49E55-EE69-47E9-BDAE-21D6DF015264" Version="1.1.0.0" />
   <Properties>
-    <DisplayName>TTRecorder</DisplayName>
-    <PublisherDisplayName>nhammerl</PublisherDisplayName>
+    <DisplayName>Task Time Recorder</DisplayName>
+    <PublisherDisplayName>NicoHammerl</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="TTRecorder.App">
-      <m2:VisualElements DisplayName="TTRecorder" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="TTRecorder" ForegroundText="light" BackgroundColor="#464646">
+      <m2:VisualElements DisplayName="Task Time Recorder" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="TTRecorder" ForegroundText="light" BackgroundColor="#464646">
         <m2:SplashScreen Image="Assets\SplashScreen.png" />
       </m2:VisualElements>
     </Application>

@@ -104,3 +104,5 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 /TTRecorder/*.pfx
+/TTRecorder/AppPackages
+/TTRecorder/Package.StoreAssociation.xml
