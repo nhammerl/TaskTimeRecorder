@@ -86,23 +86,30 @@ namespace nhammerl.TTRecorder.ViewModel
                         BorderBrush = new SolidColorBrush(Colors.Green) { Opacity = 0.5 };
                         IsEnabled = false;
                         Break.ImagePath = @"Images/finish.png";
+                        _timer.Stop();
                         break;
 
                     case TaskState.OnBreak:
                         BorderBrush = new SolidColorBrush(Colors.Red) { Opacity = 0.5 };
                         IsEnabled = true;
                         Break.ImagePath = @"Images/play.png";
+                        _timer.Stop();
                         break;
 
                     case TaskState.Running:
                         BorderBrush = new SolidColorBrush(Colors.Yellow) { Opacity = 0.5 };
                         IsEnabled = true;
                         Break.ImagePath = @"Images/break.png";
+                        _timer.Start();
                         break;
                 }
                 if (!_initLoad)
                 {
                     _dataConnector.UpdateTask(TaskModel, value);
+                }
+                else if (_state == TaskState.Completed || _state == TaskState.OnBreak)
+                {
+                    timer_Tick(null, null);
                 }
             }
         }
@@ -306,7 +313,6 @@ namespace nhammerl.TTRecorder.ViewModel
 
             TaskModel.End = DateTime.Now;
             State = TaskState.Completed;
-            _timer.Stop();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
