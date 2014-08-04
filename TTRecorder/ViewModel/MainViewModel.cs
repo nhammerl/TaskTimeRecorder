@@ -1,5 +1,6 @@
 ﻿using nhammerl.TTRecorder.Annotations;
 using nhammerl.TTRecorder.Model;
+using nhammerl.TTRecorder.Model.Data;
 using nhammerl.TTRecorder.ViewModel.Command;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,13 @@ namespace nhammerl.TTRecorder.ViewModel
         public MainViewModel(MainPage mainPage)
         {
             _mainPage = mainPage;
+
+            // Todo: Delete after tests
+
+            var xmlDataConnector = new XmlDatabaseConnector();
+            xmlDataConnector.InitDataBase();
+
+            // Todo: End
 
             // Init Commands
             PunchIn = new ViewModelCommand

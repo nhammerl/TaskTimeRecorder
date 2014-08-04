@@ -114,6 +114,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Data\IDataConnector.cs" />
+    <Compile Include="Model\Data\XmlDatabaseConnector.cs" />
     <Compile Include="Model\DefaultTaskModel.cs">
       <DependentUpon>ITaskModel.cs</DependentUpon>
     </Compile>
