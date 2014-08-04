@@ -1,5 +1,6 @@
 ﻿using nhammerl.TTRecorder.Annotations;
 using nhammerl.TTRecorder.Model;
+using nhammerl.TTRecorder.Model.Data;
 using nhammerl.TTRecorder.ViewModel.Command;
 using System;
 using System.Collections.ObjectModel;
@@ -19,6 +20,8 @@ namespace nhammerl.TTRecorder.ViewModel
         private bool _taskOnBreak;
         private readonly DispatcherTimer _timer;
         private ObservableCollection<ITaskViewModel> _targetList;
+        private readonly IDataConnector _dataConnector;
+        private bool _initLoad = true;
 
         private ITaskModel _taskModel;
 
@@ -97,6 +100,10 @@ namespace nhammerl.TTRecorder.ViewModel
                         Break.ImagePath = @"Images/break.png";
                         break;
                 }
+                if (!_initLoad)
+                {
+                    _dataConnector.UpdateTask(TaskModel, value);
+                }
             }
         }
 
@@ -154,11 +161,12 @@ namespace nhammerl.TTRecorder.ViewModel
         /// <summary>
         /// Constructor of the class.
         /// </summary>
-        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList)
+        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector)
         {
             _taskOnBreak = false;
             TaskModel = taskModel;
             this._targetList = targetList;
+            _dataConnector = dataConnector;
 
             Break = new ViewModelCommand()
             {
@@ -181,6 +189,7 @@ namespace nhammerl.TTRecorder.ViewModel
                         if (targetList != null && targetList.Contains(this))
                         {
                             targetList.Remove(this);
+                            _dataConnector.DeleteTask(taskModel.Id);
                         }
                     }),
                 Text = "Delete",
@@ -193,6 +202,60 @@ namespace nhammerl.TTRecorder.ViewModel
             _timer.Start();
 
             State = TaskState.Running;
+            _initLoad = false;
+        }
+
+        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector, TaskState state)
+        {
+            _taskOnBreak = false;
+            TaskModel = taskModel;
+            this._targetList = targetList;
+            _dataConnector = dataConnector;
+
+            Break = new ViewModelCommand()
+            {
+                Command = new RelayCommand(r => BreakTask()),
+                Text = "Break"
+            };
+
+            PunchOut = new ViewModelCommand
+            {
+                Command = new RelayCommand(r => FinishTask()),
+                Text = "Finished",
+                ImagePath = @"Images/finish.png"
+            };
+
+            DeleteFromList = new ViewModelCommand
+            {
+                Command = new RelayCommand(
+                    r =>
+                    {
+                        if (targetList != null && targetList.Contains(this))
+                        {
+                            targetList.Remove(this);
+                            _dataConnector.DeleteTask(taskModel.Id);
+                        }
+                    }),
+                Text = "Delete",
+                ImagePath = "Images/delete.png"
+            };
+
+            _timer = new DispatcherTimer();
+            _timer.Tick += timer_Tick;
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Start();
+
+            State = state;
+            _initLoad = false;
+        }
+
+        /// <summary>
+        /// Save Task to List of target and to connector.
+        /// </summary>
+        public void SaveTaskToList()
+        {
+            _targetList.Add(this);
+            _dataConnector.SaveTask(TaskModel, State);
         }
 
         private void timer_Tick(object sender, object e)

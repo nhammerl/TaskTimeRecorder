@@ -1,4 +1,5 @@
-﻿using System;
+﻿using nhammerl.TTRecorder.ViewModel;
+using System;
 using System.Collections.Generic;
 
 namespace nhammerl.TTRecorder.Model.Data
@@ -7,10 +8,12 @@ namespace nhammerl.TTRecorder.Model.Data
     {
         void InitDataBase();
 
-        void SaveTask(ITaskModel task);
+        void SaveTask(ITaskModel task, TaskState state);
 
         void DeleteTask(Guid taskId);
 
-        IEnumerable<ITaskModel> GetAllTasks();
+        void UpdateTask(ITaskModel task, TaskState state);
+
+        void LoadAllTasks();
     }
 }

@@ -101,6 +101,17 @@ namespace nhammerl.TTRecorder.Model
             Breaks = new ObservableCollection<TimeSpan>();
         }
 
+        /// <summary>
+        /// Constructor of the class.
+        /// </summary>
+        public DefaultTaskModel(string title, Guid id)
+        {
+            _id = id;
+            Start = DateTime.Now;
+            Title = title;
+            Breaks = new ObservableCollection<TimeSpan>();
+        }
+
         #region PropertyChanged helper
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -24,6 +24,7 @@ namespace nhammerl.TTRecorder.ViewModel
         #region Properties
 
         private readonly MainPage _mainPage;
+        private readonly IDataConnector _dataConnector;
 
         public ViewModelCommand PunchIn { get; set; }
 
@@ -73,13 +74,6 @@ namespace nhammerl.TTRecorder.ViewModel
         {
             _mainPage = mainPage;
 
-            // Todo: Delete after tests
-
-            var xmlDataConnector = new XmlDatabaseConnector();
-            xmlDataConnector.InitDataBase();
-
-            // Todo: End
-
             // Init Commands
             PunchIn = new ViewModelCommand
             {
@@ -113,6 +107,10 @@ namespace nhammerl.TTRecorder.ViewModel
 
             // Init Taskcollection.
             Tasks = new ObservableCollection<ITaskViewModel>();
+
+            // Init DataConnector
+            _dataConnector = new XmlDatabaseConnector(Tasks);
+            _dataConnector.LoadAllTasks();
         }
 
         /// <summary>
@@ -120,7 +118,12 @@ namespace nhammerl.TTRecorder.ViewModel
         /// </summary>
         public void CreateTask()
         {
-            Tasks.Add(new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks) { ItemVisualWidth = _mainPage.ActualWidth });
+            var newTask = new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks, _dataConnector)
+            {
+                ItemVisualWidth = _mainPage.ActualWidth
+            };
+
+            newTask.SaveTaskToList();
             ShowInputDialog = false;
         }
 
