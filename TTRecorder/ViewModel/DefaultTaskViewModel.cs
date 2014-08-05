@@ -22,6 +22,7 @@ namespace nhammerl.TTRecorder.ViewModel
         private readonly DispatcherTimer _timer;
         private readonly ObservableCollection<ITaskViewModel> _targetList;
         private readonly IDataConnector _dataConnector;
+        private readonly MainPage _mainPage;
         private readonly bool _initLoad = true;
 
         private ITaskModel _taskModel;
@@ -185,12 +186,14 @@ namespace nhammerl.TTRecorder.ViewModel
         /// <summary>
         /// Constructor of the class.
         /// </summary>
-        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector)
+        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector, MainPage mainPage)
         {
             _taskOnBreak = false;
             TaskModel = taskModel;
             this._targetList = targetList;
             _dataConnector = dataConnector;
+            _mainPage = mainPage;
+            ItemVisualWidth = _mainPage.ActualWidth;
 
             Break = new ViewModelCommand()
             {
@@ -229,12 +232,13 @@ namespace nhammerl.TTRecorder.ViewModel
             _initLoad = false;
         }
 
-        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector, TaskState state)
+        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector, MainPage mainPage, TaskState state)
         {
             _taskOnBreak = false;
             TaskModel = taskModel;
-            this._targetList = targetList;
+            _targetList = targetList;
             _dataConnector = dataConnector;
+            _mainPage = mainPage;
 
             Break = new ViewModelCommand()
             {

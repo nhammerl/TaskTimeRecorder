@@ -30,11 +30,11 @@ namespace nhammerl.TTRecorder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        public void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             foreach (var task in TaskList.Items.Cast<ITaskViewModel>())
             {
-                task.ItemVisualWidth = TaskList.ActualWidth;
+                task.ItemVisualWidth = this.ActualWidth;
             }
         }
 

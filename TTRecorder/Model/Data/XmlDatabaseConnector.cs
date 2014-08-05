@@ -10,12 +10,14 @@ namespace nhammerl.TTRecorder.Model.Data
     public class XmlDatabaseConnector : IDataConnector
     {
         private readonly ObservableCollection<ITaskViewModel> _workingTasksList;
+        private readonly MainPage _mainPage;
         private XmlDocument _rootDocument;
         private IStorageFile _databaseXmlFile;
 
-        public XmlDatabaseConnector(ObservableCollection<ITaskViewModel> workingTasksList)
+        public XmlDatabaseConnector(ObservableCollection<ITaskViewModel> workingTasksList, MainPage mainPage)
         {
             _workingTasksList = workingTasksList;
+            _mainPage = mainPage;
             InitDataBase();
         }
 
@@ -147,7 +149,7 @@ namespace nhammerl.TTRecorder.Model.Data
                     Breaks = listBreaks
                 };
 
-                _workingTasksList.Add(new DefaultTaskViewModel(taskModel, _workingTasksList, this, (TaskState)Convert.ToInt32(state)));
+                _workingTasksList.Add(new DefaultTaskViewModel(taskModel, _workingTasksList, this, _mainPage, (TaskState)Convert.ToInt32(state)));
             }
         }
     }

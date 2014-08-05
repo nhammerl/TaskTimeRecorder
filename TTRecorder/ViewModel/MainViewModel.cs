@@ -109,8 +109,9 @@ namespace nhammerl.TTRecorder.ViewModel
             Tasks = new ObservableCollection<ITaskViewModel>();
 
             // Init DataConnector
-            _dataConnector = new XmlDatabaseConnector(Tasks);
+            _dataConnector = new XmlDatabaseConnector(Tasks, _mainPage);
             _dataConnector.LoadAllTasks();
+            _mainPage.MainPage_SizeChanged(null, null);
         }
 
         /// <summary>
@@ -118,11 +119,7 @@ namespace nhammerl.TTRecorder.ViewModel
         /// </summary>
         public void CreateTask()
         {
-            var newTask = new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks, _dataConnector)
-            {
-                ItemVisualWidth = _mainPage.ActualWidth
-            };
-
+            var newTask = new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks, _dataConnector, _mainPage);
             newTask.SaveTaskToList();
             ShowInputDialog = false;
         }
