@@ -71,7 +71,7 @@
                                     <TextBlock Margin="5,0,0,0" Text="{Binding Break.Text}" VerticalAlignment="Center" />
                                 </StackPanel>
                             </Button>
-                            <Button IsEnabled="{Binding IsEnabled}" Grid.Column="6" Command="{Binding PunchOut.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <Button Grid.Column="6" Command="{Binding PunchOut.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Height="19" Width="19" HorizontalAlignment="Left" VerticalAlignment="Center" Source="{Binding PunchOut.ImagePath}" />
                                     <TextBlock Margin="5,0,0,0" Text="{Binding PunchOut.Text}" VerticalAlignment="Center" />

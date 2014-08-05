@@ -152,6 +152,7 @@
     <Content Include="Images\delete.png" />
     <Content Include="Images\finish.png" />
     <Content Include="Images\play.png" />
+    <Content Include="Images\reopen.png" />
     <Content Include="Images\save.png" />
     <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>

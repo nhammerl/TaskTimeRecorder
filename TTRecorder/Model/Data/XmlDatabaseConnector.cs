@@ -1,10 +1,8 @@
 ﻿using nhammerl.TTRecorder.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Data.Xml.Dom;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 
 namespace nhammerl.TTRecorder.Model.Data
@@ -74,12 +72,22 @@ namespace nhammerl.TTRecorder.Model.Data
             var state = _rootDocument.CreateElement("State");
             state.InnerText = ((int)taskState).ToString();
 
+            // Breaks
+            var rootBreaks = _rootDocument.CreateElement("Breaks");
+            foreach (var timeBreak in task.Breaks)
+            {
+                var pause = _rootDocument.CreateElement("Break");
+                pause.InnerText = timeBreak.Ticks.ToString();
+                rootBreaks.AppendChild(pause);
+            }
+
             // Add new nodes to Task node and Tasknode to rootNode
             rootTask.AppendChild(startDate);
             rootTask.AppendChild(endDate);
             rootTask.AppendChild(title);
             rootTask.AppendChild(id);
             rootTask.AppendChild(state);
+            rootTask.AppendChild(rootBreaks);
 
             _rootDocument.GetElementsByTagName("Tasks")[0].AppendChild(rootTask);
 
@@ -99,12 +107,20 @@ namespace nhammerl.TTRecorder.Model.Data
             _rootDocument.SaveToFileAsync(_databaseXmlFile);
         }
 
+        /// <summary>
+        /// Update Task, delete all and rerwrite.
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="state"></param>
         public void UpdateTask(ITaskModel task, TaskState state)
         {
             DeleteTask(task.Id);
             SaveTask(task, state);
         }
 
+        /// <summary>
+        /// Load all Taks from xml.
+        /// </summary>
         public void LoadAllTasks()
         {
             var tasks = _rootDocument.GetElementsByTagName("Task");
@@ -117,10 +133,18 @@ namespace nhammerl.TTRecorder.Model.Data
                 var id = xmlTask.ChildNodes.FirstOrDefault(c => c.NodeName == "Id").InnerText;
                 var state = xmlTask.ChildNodes.FirstOrDefault(c => c.NodeName == "State").InnerText;
 
+                // Breaks
+                var listBreaks = new ObservableCollection<TimeSpan>();
+                foreach (var timeBreak in xmlTask.ChildNodes.First(c => c.NodeName == "Breaks").ChildNodes)
+                {
+                    listBreaks.Add(new TimeSpan(Convert.ToInt64(timeBreak.InnerText)));
+                }
+
                 var taskModel = new DefaultTaskModel(title, new Guid(id))
                 {
                     Start = new DateTime(Convert.ToInt64(startDate)),
-                    End = new DateTime(Convert.ToInt64(endDate))
+                    End = new DateTime(Convert.ToInt64(endDate)),
+                    Breaks = listBreaks
                 };
 
                 _workingTasksList.Add(new DefaultTaskViewModel(taskModel, _workingTasksList, this, (TaskState)Convert.ToInt32(state)));

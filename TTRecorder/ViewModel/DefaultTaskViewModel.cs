@@ -5,6 +5,7 @@ using nhammerl.TTRecorder.ViewModel.Command;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.UI;
@@ -19,9 +20,9 @@ namespace nhammerl.TTRecorder.ViewModel
         private DateTime _breakEnd;
         private bool _taskOnBreak;
         private readonly DispatcherTimer _timer;
-        private ObservableCollection<ITaskViewModel> _targetList;
+        private readonly ObservableCollection<ITaskViewModel> _targetList;
         private readonly IDataConnector _dataConnector;
-        private bool _initLoad = true;
+        private readonly bool _initLoad = true;
 
         private ITaskModel _taskModel;
 
@@ -65,7 +66,17 @@ namespace nhammerl.TTRecorder.ViewModel
             }
         }
 
-        public ICommandViewModel PunchOut { get; set; }
+        private ICommandViewModel _punchOut;
+
+        public ICommandViewModel PunchOut
+        {
+            get { return _punchOut; }
+            set
+            {
+                _punchOut = value;
+                OnPropertyChanged();
+            }
+        }
 
         private TaskState _state;
 
@@ -86,6 +97,11 @@ namespace nhammerl.TTRecorder.ViewModel
                         BorderBrush = new SolidColorBrush(Colors.Green) { Opacity = 0.5 };
                         IsEnabled = false;
                         Break.ImagePath = @"Images/finish.png";
+                        Break.Text = "Break";
+
+                        PunchOut.Text = "Reopen Task";
+                        PunchOut.ImagePath = @"Images/reopen.png";
+                        PunchOut.Command = new RelayCommand(r => ReopenTask());
                         _timer.Stop();
                         break;
 
@@ -93,6 +109,7 @@ namespace nhammerl.TTRecorder.ViewModel
                         BorderBrush = new SolidColorBrush(Colors.Red) { Opacity = 0.5 };
                         IsEnabled = true;
                         Break.ImagePath = @"Images/play.png";
+                        Break.Text = "Go on";
                         _timer.Stop();
                         break;
 
@@ -313,6 +330,15 @@ namespace nhammerl.TTRecorder.ViewModel
 
             TaskModel.End = DateTime.Now;
             State = TaskState.Completed;
+        }
+
+        private void ReopenTask()
+        {
+            State = TaskState.Running;
+            PunchOut.Command = new RelayCommand(r => FinishTask());
+            TaskModel.End = new DateTime();
+            PunchOut.Text = "Finished";
+            PunchOut.ImagePath = @"Images/finish.png";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
