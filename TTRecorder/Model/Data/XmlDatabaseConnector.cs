@@ -2,8 +2,10 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Data.Xml.Dom;
 using Windows.Storage;
+using Windows.UI.Popups;
 
 namespace nhammerl.TTRecorder.Model.Data
 {
@@ -45,6 +47,7 @@ namespace nhammerl.TTRecorder.Model.Data
             else
             {
                 _rootDocument.LoadXml(fileContent);
+                LoadAllTasks();
             }
         }
 
@@ -123,7 +126,7 @@ namespace nhammerl.TTRecorder.Model.Data
         /// <summary>
         /// Load all Taks from xml.
         /// </summary>
-        public void LoadAllTasks()
+        public async void LoadAllTasks()
         {
             var tasks = _rootDocument.GetElementsByTagName("Task");
 
@@ -151,6 +154,18 @@ namespace nhammerl.TTRecorder.Model.Data
 
                 _workingTasksList.Add(new DefaultTaskViewModel(taskModel, _workingTasksList, this, _mainPage, (TaskState)Convert.ToInt32(state)));
             }
+
+            //ShowMessage("T: " + tasks.Count);
+        }
+
+        /// <summary>
+        /// Displays an message.
+        /// </summary>
+        /// <param name="message"></param>
+        private void ShowMessage(string message)
+        {
+            var dialogWindow = new MessageDialog(message);
+            dialogWindow.ShowAsync();
         }
     }
 }

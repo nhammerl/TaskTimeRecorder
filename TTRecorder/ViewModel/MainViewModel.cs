@@ -120,7 +120,6 @@ namespace nhammerl.TTRecorder.ViewModel
 
             // Init DataConnector
             _dataConnector = new XmlDatabaseConnector(Tasks, _mainPage);
-            _dataConnector.LoadAllTasks();
             _mainPage.MainPage_SizeChanged(null, null);
         }
 
