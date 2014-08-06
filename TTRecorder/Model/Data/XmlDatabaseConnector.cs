@@ -66,7 +66,7 @@ namespace nhammerl.TTRecorder.Model.Data
             endDate.InnerText = task.End.Ticks.ToString();
 
             var title = _rootDocument.CreateElement("Title");
-            title.InnerText = task.Title;
+            title.InnerText = task.Title ?? "";
 
             var id = _rootDocument.CreateElement("Id");
             id.InnerText = task.Id.ToString();

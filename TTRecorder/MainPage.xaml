@@ -47,7 +47,7 @@
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="1" Text="Elapsed time" />
             <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Grid.Column="7" Text="Remove task" />
         </Grid>
-        <ListView Name="TaskList" BorderBrush="DarkGray" BorderThickness="1" Margin="20,130,20,20" ItemsSource="{Binding Tasks}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
+        <ListView Name="TaskList" BorderBrush="DarkGray" BorderThickness="1" Margin="20,130,20,20" ItemsSource="{Binding Tasks, Mode=TwoWay}" SelectionChanged="SelectionChangedOnTaskListSetSelectedItemToNull">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="2" BorderBrush="{Binding BorderBrush}">
@@ -62,7 +62,7 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <TextBox IsEnabled="{Binding IsEnabled}" Grid.Column="0" Text="{Binding TaskModel.Title}" Margin="10,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
+                            <TextBox Tag="{Binding}" LostFocus="TextOnInputTextBoxChangd_SavesData" GotFocus="TaskTitleOnFocus_CacheValue" IsEnabled="{Binding IsEnabled}" Grid.Column="0" Text="{Binding TaskModel.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                             <TextBlock Grid.Column="2" Text="{Binding TaskModel.Start, Converter={StaticResource StringFormat}, ConverterParameter='{}{0:G}'}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <TextBlock Grid.Column="3" Text="{Binding TaskModel.End, Converter={StaticResource StringFormat}, ConverterParameter='{}{0:G}'}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left"></TextBlock>
                             <Button IsEnabled="{Binding IsEnabled}" Grid.Column="4" Command="{Binding Break.Command}" Margin="0,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">

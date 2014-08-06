@@ -34,7 +34,17 @@ namespace nhammerl.TTRecorder.ViewModel
 
         public ViewModelCommand CreateOutputFile { get; set; }
 
-        public ObservableCollection<ITaskViewModel> Tasks { get; set; }
+        private ObservableCollection<ITaskViewModel> _tasks;
+
+        public ObservableCollection<ITaskViewModel> Tasks
+        {
+            get { return _tasks; }
+            set
+            {
+                _tasks = value;
+                OnPropertyChanged();
+            }
+        }
 
         private bool _showInputDialog;
 

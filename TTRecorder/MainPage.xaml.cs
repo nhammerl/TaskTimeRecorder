@@ -15,6 +15,7 @@ namespace nhammerl.TTRecorder
     public sealed partial class MainPage : Page
     {
         private readonly MainViewModel _mainViewModel;
+        private string _taskTextCache = "";
 
         public MainPage()
         {
@@ -68,6 +69,25 @@ namespace nhammerl.TTRecorder
             if (e.Key != VirtualKey.Enter) { return; }
 
             _mainViewModel.CloseInputDialog.Command.Execute(null);
+        }
+
+        private void TextOnInputTextBoxChangd_SavesData(object sender, RoutedEventArgs e)
+        {
+            if (sender.GetType() == typeof(TextBox) && ((TextBox)sender).Text != _taskTextCache)
+            {
+                if (((TextBox)sender).Tag.GetType() == typeof(DefaultTaskViewModel))
+                {
+                    ((DefaultTaskViewModel)((TextBox)sender).Tag).UpdateTaskInfosToXml();
+                }
+            }
+        }
+
+        private void TaskTitleOnFocus_CacheValue(object sender, RoutedEventArgs e)
+        {
+            if (sender.GetType() == typeof(TextBox))
+            {
+                _taskTextCache = ((TextBox)sender).Text;
+            }
         }
     }
 }

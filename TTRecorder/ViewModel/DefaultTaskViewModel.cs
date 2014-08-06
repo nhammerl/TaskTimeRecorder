@@ -345,6 +345,11 @@ namespace nhammerl.TTRecorder.ViewModel
             PunchOut.ImagePath = @"Images/finish.png";
         }
 
+        public void UpdateTaskInfosToXml()
+        {
+            _dataConnector.UpdateTask(TaskModel, State);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
