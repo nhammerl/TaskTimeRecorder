@@ -128,7 +128,7 @@ namespace nhammerl.TTRecorder.ViewModel
         /// </summary>
         public void CreateTask()
         {
-            var newTask = new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks, _dataConnector, _mainPage);
+            var newTask = new DefaultTaskViewModel(new DefaultTaskModel(DialogInputValue), Tasks, _dataConnector, _mainPage, TaskState.Running);
             newTask.SaveTaskToList();
             ShowInputDialog = false;
         }
@@ -138,7 +138,7 @@ namespace nhammerl.TTRecorder.ViewModel
         /// </summary>
         public async void GenerateOutputFile()
         {
-            var savePicker = new FileSavePicker { SuggestedStartLocation = PickerLocationId.DocumentsLibrary };
+            var savePicker = new FileSavePicker { SuggestedStartLocation = PickerLocationId.Desktop };
 
             // Dropdown of file types the user can save the file as
             savePicker.FileTypeChoices.Add("Plain Text", new List<string>() { ".txt" });
@@ -184,11 +184,11 @@ namespace nhammerl.TTRecorder.ViewModel
                     string.Format("######################### | {0} | #########################", task.TaskModel.Title));
                 if (task.State == TaskState.Completed)
                 {
-                    taskInfoBuilder.AppendLine(string.Format("Total minutes: {0}", task.TaskModel.TotalMinutes));
+                    taskInfoBuilder.AppendLine(string.Format("Total time: {0}", task.TaskModel.TotalTime.ToString(@"hh\:mm\:ss")));
                 }
                 else
                 {
-                    taskInfoBuilder.AppendLine(string.Format("Total minutes: -"));
+                    taskInfoBuilder.AppendLine(string.Format("Total time: -"));
                 }
                 taskInfoBuilder.AppendLine(string.Format("Start-End: {0} - {1}", task.TaskModel.Start, task.TaskModel.End));
                 taskInfoBuilder.AppendLine(string.Format("State: {0}", task.State));

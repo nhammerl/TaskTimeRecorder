@@ -1,5 +1,6 @@
 ﻿using nhammerl.TTRecorder.Annotations;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace nhammerl.TTRecorder.Model
             {
                 _start = value;
                 OnPropertyChanged();
-                OnPropertyChanged("TotalMinutes");
+                OnPropertyChanged("TotalTime");
             }
         }
 
@@ -59,7 +60,7 @@ namespace nhammerl.TTRecorder.Model
             {
                 _end = value;
                 OnPropertyChanged();
-                OnPropertyChanged("TotalMinutes");
+                OnPropertyChanged("TotalTime");
             }
         }
 
@@ -73,18 +74,32 @@ namespace nhammerl.TTRecorder.Model
             {
                 _breaks = value;
                 OnPropertyChanged();
-                OnPropertyChanged("TotalMinutes");
+                OnPropertyChanged("TotalTime");
             }
         }
 
-        // Helper for easy display or calculation of TotalMinutes.
-        public int TotalMinutes
+        private DateTime _lastBreak;
+
+        public DateTime LastBreak
+        {
+            get { return _lastBreak; }
+            set
+            {
+                _lastBreak = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Helper for easy display or calculation of TotalTime.
+        public TimeSpan TotalTime
         {
             get
             {
-                var pausedMinutes = Breaks.Sum(b => b.TotalMinutes);
+                var totalBreaks = Breaks.Aggregate(
+                    TimeSpan.Zero,
+                    (subtotal, t) => subtotal.Add(t));
 
-                return Convert.ToInt32((End - Start).TotalMinutes - pausedMinutes);
+                return (End - Start) - totalBreaks;
             }
         }
 

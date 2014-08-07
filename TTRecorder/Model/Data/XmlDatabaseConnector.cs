@@ -77,6 +77,9 @@ namespace nhammerl.TTRecorder.Model.Data
             var state = _rootDocument.CreateElement("State");
             state.InnerText = ((int)taskState).ToString();
 
+            var lastBreak = _rootDocument.CreateElement("LastBreak");
+            lastBreak.InnerText = task.LastBreak.Ticks.ToString();
+
             // Breaks
             var rootBreaks = _rootDocument.CreateElement("Breaks");
             foreach (var timeBreak in task.Breaks)
@@ -93,6 +96,7 @@ namespace nhammerl.TTRecorder.Model.Data
             rootTask.AppendChild(id);
             rootTask.AppendChild(state);
             rootTask.AppendChild(rootBreaks);
+            rootTask.AppendChild(lastBreak);
 
             _rootDocument.GetElementsByTagName("Tasks")[0].AppendChild(rootTask);
 
@@ -126,7 +130,7 @@ namespace nhammerl.TTRecorder.Model.Data
         /// <summary>
         /// Load all Taks from xml.
         /// </summary>
-        public async void LoadAllTasks()
+        public void LoadAllTasks()
         {
             var tasks = _rootDocument.GetElementsByTagName("Task");
 
@@ -137,6 +141,7 @@ namespace nhammerl.TTRecorder.Model.Data
                 var endDate = xmlTask.ChildNodes.FirstOrDefault(c => c.NodeName == "EndDate").InnerText;
                 var id = xmlTask.ChildNodes.FirstOrDefault(c => c.NodeName == "Id").InnerText;
                 var state = xmlTask.ChildNodes.FirstOrDefault(c => c.NodeName == "State").InnerText;
+                var lastBreak = xmlTask.ChildNodes.FirstOrDefault(c => c.NodeName == "LastBreak").InnerText;
 
                 // Breaks
                 var listBreaks = new ObservableCollection<TimeSpan>();
@@ -149,7 +154,8 @@ namespace nhammerl.TTRecorder.Model.Data
                 {
                     Start = new DateTime(Convert.ToInt64(startDate)),
                     End = new DateTime(Convert.ToInt64(endDate)),
-                    Breaks = listBreaks
+                    Breaks = listBreaks,
+                    LastBreak = new DateTime(Convert.ToInt64(lastBreak))
                 };
 
                 _workingTasksList.Add(new DefaultTaskViewModel(taskModel, _workingTasksList, this, _mainPage, (TaskState)Convert.ToInt32(state)));

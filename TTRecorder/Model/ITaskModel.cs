@@ -23,7 +23,10 @@ namespace nhammerl.TTRecorder.Model
         // Collection of breaks.
         ObservableCollection<TimeSpan> Breaks { get; set; }
 
+        // Time of last Break
+        DateTime LastBreak { get; set; }
+
         // Helper to display the Count of total minutes.
-        int TotalMinutes { get; }
+        TimeSpan TotalTime { get; }
     }
 }

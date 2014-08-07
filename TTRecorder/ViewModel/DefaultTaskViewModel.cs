@@ -5,7 +5,6 @@ using nhammerl.TTRecorder.ViewModel.Command;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.UI;
@@ -16,43 +15,91 @@ namespace nhammerl.TTRecorder.ViewModel
 {
     public class DefaultTaskViewModel : ITaskViewModel, INotifyPropertyChanged
     {
-        private DateTime _breakStart;
-        private DateTime _breakEnd;
-        private bool _taskOnBreak;
-        private readonly DispatcherTimer _timer;
-        private readonly ObservableCollection<ITaskViewModel> _targetList;
-        private readonly IDataConnector _dataConnector;
-        private readonly MainPage _mainPage;
-        private readonly bool _initLoad = true;
+        #region private properties
 
+        private readonly IDataConnector _dataConnector;
+        private readonly bool _initLoad = true;
+        private readonly ObservableCollection<ITaskViewModel> _targetList;
+        private readonly DispatcherTimer _timer;
+        private Brush _borderBrush;
+        private ICommandViewModel _break;
+        private DateTime _breakEnd;
+        private DateTime _breakStart;
+        private ICommandViewModel _deleteFromList;
+        private double _itemVisualWidth;
+        private ICommandViewModel _punchOut;
+        private TaskState _state;
         private ITaskModel _taskModel;
 
-        public ITaskModel TaskModel
+        #endregion private properties
+
+        /// <summary>
+        /// Constructor of the class
+        /// </summary>
+        /// <param name="taskModel"></param>
+        /// <param name="targetList"></param>
+        /// <param name="dataConnector"></param>
+        /// <param name="mainPage"></param>
+        /// <param name="state"></param>
+        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector, MainPage mainPage, TaskState state)
+        {
+            TaskModel = taskModel;
+            _targetList = targetList;
+            _dataConnector = dataConnector;
+            ItemVisualWidth = mainPage.ActualWidth;
+
+            // Commands
+            Break = new ViewModelCommand()
+            {
+                Command = new RelayCommand(r => BreakTask()),
+                Text = "Break"
+            };
+
+            PunchOut = new ViewModelCommand
+            {
+                Command = new RelayCommand(r => FinishTask()),
+                Text = "Finished",
+                ImagePath = @"Images/finish.png"
+            };
+
+            DeleteFromList = new ViewModelCommand
+            {
+                Command = new RelayCommand(
+                    r =>
+                    {
+                        if (targetList != null && targetList.Contains(this))
+                        {
+                            targetList.Remove(this);
+                            _dataConnector.DeleteTask(taskModel.Id);
+                        }
+                    }),
+                Text = "Delete",
+                ImagePath = "Images/delete.png"
+            };
+
+            // Timer Init
+            _timer = new DispatcherTimer();
+            _timer.Tick += timer_Tick;
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Start();
+
+            // Setstate
+            State = state;
+            _initLoad = false;
+        }
+
+        public Brush BorderBrush
         {
             get
             {
-                return _taskModel;
+                return _borderBrush;
             }
             set
             {
-                _taskModel = value;
+                _borderBrush = value;
                 OnPropertyChanged();
             }
         }
-
-        private string _elapsedTime;
-
-        public string ElapsedTime
-        {
-            get { return _elapsedTime; }
-            set
-            {
-                _elapsedTime = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ICommandViewModel _break;
 
         public ICommandViewModel Break
         {
@@ -67,7 +114,65 @@ namespace nhammerl.TTRecorder.ViewModel
             }
         }
 
-        private ICommandViewModel _punchOut;
+        public ICommandViewModel DeleteFromList
+        {
+            get { return _deleteFromList; }
+            set
+            {
+                _deleteFromList = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ElapsedTime
+        {
+            get
+            {
+                var totalSeconds = TaskModel.Breaks.Sum(b => b.TotalSeconds);
+                var result = "";
+
+                switch (State)
+                {
+                    case TaskState.Completed:
+                        result = TimeSpan.FromSeconds((((TaskModel.End - TaskModel.Start).TotalSeconds) - totalSeconds)).ToString(@"hh\:mm\:ss");
+                        break;
+
+                    case TaskState.Running:
+                        result = TimeSpan.FromSeconds((((DateTime.Now - TaskModel.Start).TotalSeconds) - totalSeconds)).ToString(@"hh\:mm\:ss");
+                        break;
+
+                    case TaskState.OnBreak:
+                        result = TimeSpan.FromSeconds((((TaskModel.LastBreak - TaskModel.Start).TotalSeconds) - totalSeconds)).ToString(@"hh\:mm\:ss");
+                        break;
+                }
+
+                return result;
+            }
+            set
+            {
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
+            {
+                _isEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public double ItemVisualWidth
+        {
+            get { return _itemVisualWidth; }
+            set
+            {
+                _itemVisualWidth = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommandViewModel PunchOut
         {
@@ -78,8 +183,6 @@ namespace nhammerl.TTRecorder.ViewModel
                 OnPropertyChanged();
             }
         }
-
-        private TaskState _state;
 
         public TaskState State
         {
@@ -97,6 +200,7 @@ namespace nhammerl.TTRecorder.ViewModel
                     case TaskState.Completed:
                         BorderBrush = new SolidColorBrush(Colors.Green) { Opacity = 0.5 };
                         IsEnabled = false;
+
                         Break.ImagePath = @"Images/finish.png";
                         Break.Text = "Break";
 
@@ -104,6 +208,7 @@ namespace nhammerl.TTRecorder.ViewModel
                         PunchOut.ImagePath = @"Images/reopen.png";
                         PunchOut.Command = new RelayCommand(r => ReopenTask());
                         _timer.Stop();
+
                         break;
 
                     case TaskState.OnBreak:
@@ -112,6 +217,19 @@ namespace nhammerl.TTRecorder.ViewModel
                         Break.ImagePath = @"Images/play.png";
                         Break.Text = "Go on";
                         _timer.Stop();
+
+                        if (_initLoad)
+                        {
+                            var pausedMinutes = TaskModel.Breaks.Sum(b => b.TotalSeconds);
+
+                            ElapsedTime = TimeSpan.FromSeconds((((TaskModel.LastBreak - TaskModel.Start).TotalSeconds) - pausedMinutes)).ToString(@"hh\:mm\:ss");
+
+                            _breakStart = TaskModel.LastBreak;
+                        }
+                        else
+                        {
+                            TaskModel.LastBreak = DateTime.Now;
+                        }
                         break;
 
                     case TaskState.Running:
@@ -132,150 +250,20 @@ namespace nhammerl.TTRecorder.ViewModel
             }
         }
 
-        private Brush _borderBrush;
-
-        public Brush BorderBrush
+        public ITaskModel TaskModel
         {
             get
             {
-                return _borderBrush;
+                return _taskModel;
             }
             set
             {
-                _borderBrush = value;
+                _taskModel = value;
                 OnPropertyChanged();
             }
         }
 
         private bool _isEnabled { get; set; }
-
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
-            {
-                _isEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ICommandViewModel _deleteFromList;
-
-        public ICommandViewModel DeleteFromList
-        {
-            get { return _deleteFromList; }
-            set
-            {
-                _deleteFromList = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private double _itemVisualWidth;
-
-        public double ItemVisualWidth
-        {
-            get { return _itemVisualWidth; }
-            set
-            {
-                _itemVisualWidth = value;
-                OnPropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Constructor of the class.
-        /// </summary>
-        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector, MainPage mainPage)
-        {
-            _taskOnBreak = false;
-            TaskModel = taskModel;
-            this._targetList = targetList;
-            _dataConnector = dataConnector;
-            _mainPage = mainPage;
-            ItemVisualWidth = _mainPage.ActualWidth;
-
-            Break = new ViewModelCommand()
-            {
-                Command = new RelayCommand(r => BreakTask()),
-                Text = "Break"
-            };
-
-            PunchOut = new ViewModelCommand
-            {
-                Command = new RelayCommand(r => FinishTask()),
-                Text = "Finished",
-                ImagePath = @"Images/finish.png"
-            };
-
-            DeleteFromList = new ViewModelCommand
-            {
-                Command = new RelayCommand(
-                    r =>
-                    {
-                        if (targetList != null && targetList.Contains(this))
-                        {
-                            targetList.Remove(this);
-                            _dataConnector.DeleteTask(taskModel.Id);
-                        }
-                    }),
-                Text = "Delete",
-                ImagePath = "Images/delete.png"
-            };
-
-            _timer = new DispatcherTimer();
-            _timer.Tick += timer_Tick;
-            _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Start();
-
-            State = TaskState.Running;
-            _initLoad = false;
-        }
-
-        public DefaultTaskViewModel(ITaskModel taskModel, ObservableCollection<ITaskViewModel> targetList, IDataConnector dataConnector, MainPage mainPage, TaskState state)
-        {
-            _taskOnBreak = false;
-            TaskModel = taskModel;
-            _targetList = targetList;
-            _dataConnector = dataConnector;
-            _mainPage = mainPage;
-
-            Break = new ViewModelCommand()
-            {
-                Command = new RelayCommand(r => BreakTask()),
-                Text = "Break"
-            };
-
-            PunchOut = new ViewModelCommand
-            {
-                Command = new RelayCommand(r => FinishTask()),
-                Text = "Finished",
-                ImagePath = @"Images/finish.png"
-            };
-
-            DeleteFromList = new ViewModelCommand
-            {
-                Command = new RelayCommand(
-                    r =>
-                    {
-                        if (targetList != null && targetList.Contains(this))
-                        {
-                            targetList.Remove(this);
-                            _dataConnector.DeleteTask(taskModel.Id);
-                        }
-                    }),
-                Text = "Delete",
-                ImagePath = "Images/delete.png"
-            };
-
-            _timer = new DispatcherTimer();
-            _timer.Tick += timer_Tick;
-            _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Start();
-
-            State = state;
-            _initLoad = false;
-        }
 
         /// <summary>
         /// Save Task to List of target and to connector.
@@ -286,14 +274,9 @@ namespace nhammerl.TTRecorder.ViewModel
             _dataConnector.SaveTask(TaskModel, State);
         }
 
-        private void timer_Tick(object sender, object e)
+        public void UpdateTaskInfosToXml()
         {
-            if (!_taskOnBreak)
-            {
-                var pausedMinutes = TaskModel.Breaks.Sum(b => b.TotalSeconds);
-
-                ElapsedTime = TimeSpan.FromSeconds((((DateTime.Now - TaskModel.Start).TotalSeconds) - pausedMinutes)).ToString(@"hh\:mm\:ss");
-            }
+            _dataConnector.UpdateTask(TaskModel, State);
         }
 
         /// <summary>
@@ -301,10 +284,9 @@ namespace nhammerl.TTRecorder.ViewModel
         /// </summary>
         private void BreakTask()
         {
-            if (_taskOnBreak)
+            if (State == TaskState.OnBreak)
             {
                 _breakEnd = DateTime.Now;
-                _taskOnBreak = false;
 
                 var breakSpan = _breakEnd - _breakStart;
 
@@ -316,7 +298,6 @@ namespace nhammerl.TTRecorder.ViewModel
             else
             {
                 _breakStart = DateTime.Now;
-                _taskOnBreak = true;
                 State = TaskState.OnBreak;
                 Break.Text = "Go on";
             }
@@ -327,17 +308,22 @@ namespace nhammerl.TTRecorder.ViewModel
         /// </summary>
         private void FinishTask()
         {
-            if (_taskOnBreak)
+            if (State == TaskState.OnBreak)
             {
                 BreakTask();
             }
 
             TaskModel.End = DateTime.Now;
+            TaskModel.LastBreak = DateTime.Now;
             State = TaskState.Completed;
         }
 
+        /// <summary>
+        /// Reopen Task
+        /// </summary>
         private void ReopenTask()
         {
+            TaskModel.Breaks.Add(DateTime.Now - TaskModel.End);
             State = TaskState.Running;
             PunchOut.Command = new RelayCommand(r => FinishTask());
             TaskModel.End = new DateTime();
@@ -345,9 +331,17 @@ namespace nhammerl.TTRecorder.ViewModel
             PunchOut.ImagePath = @"Images/finish.png";
         }
 
-        public void UpdateTaskInfosToXml()
+        /// <summary>
+        /// timer action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timer_Tick(object sender, object e)
         {
-            _dataConnector.UpdateTask(TaskModel, State);
+            if (State != TaskState.OnBreak)
+            {
+                OnPropertyChanged("ElapsedTime");
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
